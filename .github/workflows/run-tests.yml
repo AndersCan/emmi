@@ -1,4 +1,10 @@
 name: run tests
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
 jobs:
   bun-test:
     name: bun test
