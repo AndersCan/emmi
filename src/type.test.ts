@@ -30,4 +30,25 @@ describe("types", () => {
       "output",
     ]);
   });
+  test("void and undefined are allowed as return type", async () => {
+    const m = emmi<{
+      test: Event<"input", "output">;
+    }>();
+
+    m.on("test", (input) => {
+      expect(input).toEqual("input");
+      return "output";
+    });
+
+    m.on("test", (input) => {
+      expect(input).toEqual("input");
+      return undefined;
+    });
+
+    m.on("test", (input) => {
+      expect(input).toEqual("input");
+    });
+    const result: "output"[] = m.emit("test", "input");
+    expect(result, "undefined values are removed").toEqual(["output"]);
+  });
 });

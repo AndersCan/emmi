@@ -1,9 +1,10 @@
 export type Event<Input, Output> = {
   input: Input;
-  output: Output;
+  output: Output | undefined | void;
 };
 
 type EventMap = Record<string, Event<unknown, unknown>>;
+type NonUndefined<T> = T extends undefined | void ? never : T;
 
 export function emmi<EMap extends EventMap>() {
   const listeners = new Map<
@@ -16,7 +17,7 @@ export function emmi<EMap extends EventMap>() {
     Array<
       (
         input: EMap[keyof EMap]["input"],
-        output: EMap[keyof EMap]["output"][],
+        output: NonUndefined<EMap[keyof EMap]["output"]>[],
       ) => void
     >
   >();
@@ -60,15 +61,15 @@ export function emmi<EMap extends EventMap>() {
   function emit<Key extends keyof EMap>(
     key: Key,
     data: EMap[Key]["input"],
-  ): EMap[Key]["output"][] {
-    let replies: EMap[Key]["output"][] = [];
+  ): NonUndefined<EMap[Key]["output"]>[] {
+    let replies: NonUndefined<EMap[keyof EMap]["output"]>[] = [];
 
     const l = listeners.get(key) || [];
     let i = -1;
     while (l.length > ++i) {
       const fn = l[i];
       const res = fn(data);
-      res !== undefined && replies.push(res);
+      isDefined(res) && replies.push(res);
     }
 
     const rl = replyListeners.get(key) || [];
@@ -127,4 +128,8 @@ export function emmi<EMap extends EventMap>() {
     off,
     offReply,
   };
+}
+
+function isDefined<T>(t: T): t is NonUndefined<T> {
+  return t !== undefined;
 }
