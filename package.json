@@ -23,6 +23,7 @@
     "dev": "vite",
     "build": "vite build",
     "test": "vitest",
+    "preversion": "bun test && npm run build",
     "prepublishOnly": "vitest run && npm run build"
   },
   "devDependencies": {
