@@ -1,4 +1,4 @@
-type Event<Input, Output> = {
+export type Event<Input, Output> = {
   input: Input;
   output: Output;
 };
@@ -13,7 +13,12 @@ export function emmi<EMap extends EventMap>() {
 
   const replyListeners = new Map<
     keyof EMap,
-    Array<(input: EMap[keyof EMap]["output"]) => void>
+    Array<
+      (
+        input: EMap[keyof EMap]["input"],
+        output: EMap[keyof EMap]["output"][],
+      ) => void
+    >
   >();
 
   /**
@@ -36,7 +41,10 @@ export function emmi<EMap extends EventMap>() {
    */
   function onReply<Key extends keyof EMap>(
     key: Key,
-    listener: (args: EMap[Key]["output"]) => void,
+    listener: (
+      input: EMap[Key]["input"],
+      output: EMap[Key]["output"][],
+    ) => void,
   ) {
     const handlers = replyListeners.get(key);
     if (handlers) {
@@ -67,7 +75,7 @@ export function emmi<EMap extends EventMap>() {
     i = -1;
     while (rl.length > ++i) {
       const fn = rl[i];
-      fn(replies);
+      fn(data, replies);
     }
     return replies;
   }
@@ -95,7 +103,10 @@ export function emmi<EMap extends EventMap>() {
    */
   function offReply<Key extends keyof EMap>(
     key: Key,
-    listener?: (args: EMap[Key]["input"]) => EMap[Key]["output"],
+    listener?: (
+      input: EMap[Key]["input"],
+      output: EMap[Key]["output"][],
+    ) => void,
   ) {
     if (listener === undefined) {
       replyListeners.set(key, []);

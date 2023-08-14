@@ -47,11 +47,38 @@ describe("emmi", () => {
       return "output";
     });
 
-    m.onReply("test", (output) => {
+    m.onReply("test", (input, output) => {
+      expect(input).toEqual("input");
       expect(output).toEqual(["output"]);
     });
 
     expect(m.emit("test", "input")).toEqual(["output"]);
+  });
+
+  test("fires onReply - 2 listeners", () => {
+    const m = emmi<{
+      test: {
+        input: "input";
+        output: "output";
+      };
+    }>();
+
+    let i = 0;
+
+    m.onReply("test", (input, output) => {
+      i++;
+      expect(input).toEqual("input");
+      expect(output).toEqual([]);
+    });
+
+    m.onReply("test", (input, output) => {
+      i++;
+      expect(input).toEqual("input");
+      expect(output).toEqual([]);
+    });
+
+    expect(m.emit("test", "input")).toEqual([]);
+    expect(i).toEqual(2);
   });
 
   test("off", () => {
@@ -88,5 +115,48 @@ describe("emmi", () => {
     m.on("test", () => "output");
     m.off("test");
     expect(m.emit("test", "input")).toEqual([]);
+  });
+
+  test("offReply", () => {
+    const m = emmi<{
+      test: {
+        input: "input";
+        output: "output";
+      };
+    }>();
+
+    const handler = (input: "input", output: "output"[]) => {
+      expect(input).toEqual("input");
+      expect(output).toEqual([]);
+    };
+    m.onReply("test", handler);
+    expect(m.emit("test", "input")).toEqual([]);
+    m.offReply("test", handler);
+    expect(m.emit("test", "input")).toEqual([]);
+  });
+
+  test("offReply all", () => {
+    const m = emmi<{
+      test: {
+        input: "input";
+        output: "output";
+      };
+    }>();
+
+    let i = 0;
+
+    m.onReply("test", (input, output) => {
+      i++;
+      expect(input).toEqual("input");
+      expect(output).toEqual([]);
+    });
+
+    expect(m.emit("test", "input")).toEqual([]);
+    expect(i).toEqual(1);
+
+    m.offReply("test");
+
+    expect(m.emit("test", "input")).toEqual([]);
+    expect(i).toEqual(1);
   });
 });
