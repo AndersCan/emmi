@@ -8,12 +8,12 @@ type EventMap = Record<string, Event<unknown, unknown>>;
 export function emmi<EMap extends EventMap>() {
   const listeners = new Map<
     keyof EMap,
-    Array<(args: EMap[string]["input"]) => EMap[string]["output"]>
+    Array<(args: EMap[keyof EMap]["input"]) => EMap[keyof EMap]["output"]>
   >();
 
   const replyListeners = new Map<
     keyof EMap,
-    Array<(input: EMap[string]["output"]) => void>
+    Array<(input: EMap[keyof EMap]["output"]) => void>
   >();
 
   /**
@@ -53,8 +53,22 @@ export function emmi<EMap extends EventMap>() {
     key: Key,
     data: EMap[Key]["input"],
   ): EMap[Key]["output"][] {
-    const replies = (listeners.get(key) || []).map((fn) => fn(data));
-    (replyListeners.get(key) || []).forEach((fn) => fn(replies));
+    let replies: EMap[Key]["output"][] = [];
+
+    const l = listeners.get(key) || [];
+    let i = -1;
+    while (l.length > ++i) {
+      const fn = l[i];
+      const res = fn(data);
+      res !== undefined && replies.push(res);
+    }
+
+    const rl = replyListeners.get(key) || [];
+    i = -1;
+    while (rl.length > ++i) {
+      const fn = rl[i];
+      fn(replies);
+    }
     return replies;
   }
 
@@ -90,7 +104,8 @@ export function emmi<EMap extends EventMap>() {
 
     const handlers = replyListeners.get(key);
     if (handlers) {
-      handlers.splice(handlers.indexOf(listener) >>> 0, 1);
+      const index = handlers.indexOf(listener);
+      index !== -1 && handlers.splice(index, 1);
     }
   }
 

@@ -9,7 +9,7 @@ export default defineConfig({
     lib: {
       fileName: "index",
       entry: path.resolve(process.cwd(), "./src/index.ts"),
-      formats: ["es"],
+      formats: ["es", "cjs"],
     },
   },
   plugins: [dts()],
