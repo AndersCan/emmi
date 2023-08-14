@@ -34,6 +34,46 @@ describe("emmi", () => {
     expect(m.emit("test", "input")).toEqual([]);
   });
 
+  test("on can spread array with options", () => {
+    const m = emmi<{
+      test: {
+        input: "input";
+        output: "output";
+      };
+    }>();
+
+    m.on(
+      "test",
+      (input) => {
+        expect(input).toEqual("input");
+        return ["output", "output", "output"];
+      },
+      { spreadReturn: true },
+    );
+
+    expect(m.emit("test", "input")).toEqual(["output", "output", "output"]);
+  });
+
+  test("on - spreadFalse", () => {
+    const m = emmi<{
+      test: {
+        input: "input";
+        output: "output";
+      };
+    }>();
+
+    m.on(
+      "test",
+      (input) => {
+        expect(input).toEqual("input");
+        return "output";
+      },
+      { spreadReturn: false },
+    );
+
+    expect(m.emit("test", "input")).toEqual(["output"]);
+  });
+
   test("fires onReply", () => {
     const m = emmi<{
       test: {

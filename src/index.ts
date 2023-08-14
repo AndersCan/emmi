@@ -5,7 +5,14 @@ export type Event<Input, Output> = {
 
 type EventMap = Record<string, Event<unknown, unknown>>;
 type NonUndefined<T> = T extends undefined | void ? never : T;
+interface ListenerOptions {
+  // Indicate if the returned value should be `spread`, enables returning an array as multiple results
+  spreadReturn: boolean;
+}
 
+type IsSpreadOptions = ListenerOptions & {
+  spreadReturn: true;
+};
 /**
  * emmi - a small event emitter that enables many workflows
  *
@@ -14,8 +21,14 @@ type NonUndefined<T> = T extends undefined | void ? never : T;
 export function emmi<EMap extends EventMap>() {
   const listeners = new Map<
     keyof EMap,
-    Array<(args: EMap[keyof EMap]["input"]) => EMap[keyof EMap]["output"]>
+    Array<
+      (
+        args: EMap[keyof EMap]["input"],
+      ) => EMap[keyof EMap]["output"] | EMap[keyof EMap]["output"][]
+    >
   >();
+
+  const optionsMap = new Map<Function, ListenerOptions>();
 
   const replyListeners = new Map<
     keyof EMap,
@@ -29,11 +42,25 @@ export function emmi<EMap extends EventMap>() {
 
   /**
    * Fired when the provided `key` is emitted
+   *
+   * Note: Registering the same function multiple times is possible, but not supported
    */
   function on<Key extends keyof EMap>(
     key: Key,
+    listener: (args: EMap[Key]["input"]) => EMap[Key]["output"][],
+    options: IsSpreadOptions,
+  ): void;
+  function on<Key extends keyof EMap>(
+    key: Key,
     listener: (args: EMap[Key]["input"]) => EMap[Key]["output"],
+    options?: ListenerOptions,
+  ): void;
+  function on<Key extends keyof EMap>(
+    key: Key,
+    listener: (args: EMap[Key]["input"]) => EMap[Key]["output"],
+    options?: ListenerOptions,
   ) {
+    options && optionsMap.set(listener, options);
     const handlers = listeners.get(key);
     if (handlers) {
       handlers.push(listener);
@@ -73,8 +100,13 @@ export function emmi<EMap extends EventMap>() {
     let i = -1;
     while (l.length > ++i) {
       const fn = l[i];
+      const { spreadReturn = false } = optionsMap.get(fn) || {};
       const res = fn(data);
-      isDefined(res) && replies.push(res);
+      if (shouldSpreadResult(spreadReturn, res)) {
+        replies.push(...getDefinedArr(res));
+      } else if (isDefined(res)) {
+        replies.push(res);
+      }
     }
 
     const rl = replyListeners.get(key) || [];
@@ -138,4 +170,14 @@ export function emmi<EMap extends EventMap>() {
 
 function isDefined<T>(t: T): t is NonUndefined<T> {
   return t !== undefined;
+}
+function getDefinedArr<T>(t: T[]) {
+  return t.filter(isDefined);
+}
+
+function shouldSpreadResult<T>(
+  shouldSpreadResult: boolean,
+  t: T | T[],
+): t is Array<T> {
+  return shouldSpreadResult;
 }
