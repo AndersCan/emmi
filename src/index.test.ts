@@ -121,6 +121,24 @@ describe("emmi", () => {
     const m = emmi<{
       test: {
         input: "input";
+        output: "output" | undefined;
+      };
+    }>();
+
+    const handler = (input: "input", output: "output"[]) => {
+      expect(input).toEqual("input");
+      expect(output).toEqual([]);
+    };
+    m.onReply("test", handler);
+    expect(m.emit("test", "input")).toEqual([]);
+    m.offReply("test", handler);
+    expect(m.emit("test", "input")).toEqual([]);
+  });
+
+  test("offReply - undefined", () => {
+    const m = emmi<{
+      test: {
+        input: "input";
         output: "output";
       };
     }>();

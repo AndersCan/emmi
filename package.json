@@ -9,11 +9,16 @@
     ".": {
       "import": "./dist/index.js",
       "require": "./dist/index.cjs"
+    },
+    "./helpers": {
+      "import": "./dist/helpers.js",
+      "require": "./dist/helpers.cjs"
     }
   },
   "files": [
     "dist/"
   ],
+  "sideEffects": false,
   "scripts": {
     "dev": "vite",
     "build": "vite build",

@@ -95,7 +95,8 @@ export function emmi<EMap extends EventMap>() {
 
     const handlers = listeners.get(key);
     if (handlers) {
-      handlers.splice(handlers.indexOf(listener) >>> 0, 1);
+      const index = handlers.indexOf(listener);
+      index !== -1 && handlers.splice(index, 1);
     }
   }
 
@@ -106,7 +107,7 @@ export function emmi<EMap extends EventMap>() {
     key: Key,
     listener?: (
       input: EMap[Key]["input"],
-      output: EMap[Key]["output"][],
+      output: NonUndefined<EMap[Key]["output"]>[],
     ) => void,
   ) {
     if (listener === undefined) {
