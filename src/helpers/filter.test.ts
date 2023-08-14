@@ -36,7 +36,7 @@ describe("filter", () => {
   });
 
   test("searches left to right", async () => {
-    const arr = [identity(1), identity(2), identity(4)];
+    const arr = [identity(1), identity(2), identity(3)];
     const actual = await filter(arr, (value) => value % 2 === 0);
     expect(actual).toEqual([2, 4]);
   });
@@ -48,6 +48,12 @@ describe("filter", () => {
     }).catch(() => 1337);
 
     expect(actual).toEqual(1337);
+  });
+  test("can narrow type", async () => {
+    const arr = [identity(1), identity(2), identity(3)];
+    const fn = (value: number): value is 2 => value === 2;
+    const actual: 2[] = await filter(arr, fn);
+    expect(actual).toEqual(2);
   });
 });
 

@@ -1,5 +1,13 @@
 import { iterate, type MaybePromise } from "./iterate.js";
 
+export function find<T, S extends T>(
+  arr: MaybePromise<T>[],
+  predicate: (t: T) => t is S,
+): Promise<S | undefined>;
+export function find<T>(
+  arr: MaybePromise<T>[],
+  predicate: (t: T) => boolean,
+): Promise<T | undefined>;
 export function find<T>(
   arr: MaybePromise<T>[],
   predicate: (t: T) => boolean,

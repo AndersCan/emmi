@@ -37,10 +37,9 @@ describe("find", () => {
     expect(actual).toEqual(2);
   });
 
-  test.todo("can narrow type", async () => {
+  test("can narrow type", async () => {
     const arr = [identity(1), identity(2), identity(4)];
     const fn = (value: number): value is 2 => value === 2;
-    // @ts-expect-error unable to narrow type
     const actual: 2 | undefined = await find(arr, fn);
     expect(actual).toEqual(2);
   });
