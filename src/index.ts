@@ -6,6 +6,11 @@ export type Event<Input, Output> = {
 type EventMap = Record<string, Event<unknown, unknown>>;
 type NonUndefined<T> = T extends undefined | void ? never : T;
 
+/**
+ * emmi - a small event emitter that enables many workflows
+ *
+ * [Github](https://github.com/AndersCan/emmi)
+ */
 export function emmi<EMap extends EventMap>() {
   const listeners = new Map<
     keyof EMap,

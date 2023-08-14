@@ -86,17 +86,32 @@ describe("promise", () => {
       const replies = find(m.emit("test", "input"), (t) => t === `output-3`);
       expect(await replies).toEqual(undefined);
     }
+  });
+  test("can handle exception", async () => {
+    const m = emmi<{
+      test: {
+        input: "input";
+        output: Promise<`output-${number}`>;
+      };
+    }>();
 
-    {
-      try {
-        await find(m.emit("test", "input"), (t) => {
-          if (t === "output-1") throw new Error("ops!");
-          return t === `output-3`;
-        });
-        expect(false).ok;
-      } catch (err) {
-        expect(err).toEqual(new Error("ops!"));
-      }
+    m.on("test", (input) => {
+      expect(input).toEqual("input");
+      return sleep(5).then(() => "output-1");
+    });
+    m.on("test", (input) => {
+      expect(input).toEqual("input");
+      return Promise.resolve("output-2");
+    });
+
+    try {
+      await find(m.emit("test", "input"), (t) => {
+        if (t === "output-1") throw new Error("ops!");
+        return t === `output-3`;
+      });
+      expect(false).ok;
+    } catch (err) {
+      expect(err).toEqual(new Error("ops!"));
     }
   });
 });

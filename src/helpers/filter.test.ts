@@ -40,6 +40,15 @@ describe("filter", () => {
     const actual = await filter(arr, (value) => value % 2 === 0);
     expect(actual).toEqual([2, 4]);
   });
+  test("handles exception", async () => {
+    const arr = [identity(1), identity(2), identity(3)];
+
+    const actual = await filter(arr, () => {
+      throw new Error("ops");
+    }).catch(() => 1337);
+
+    expect(actual).toEqual(1337);
+  });
 });
 
 function sleep(ms: number) {
