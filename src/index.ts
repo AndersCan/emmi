@@ -44,7 +44,7 @@ export function emmi<EMap extends EventMap>() {
     key: Key,
     listener: (
       input: EMap[Key]["input"],
-      output: EMap[Key]["output"][],
+      output: NonUndefined<EMap[Key]["output"]>[],
     ) => void,
   ) {
     const handlers = replyListeners.get(key);
