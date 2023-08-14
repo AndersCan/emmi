@@ -1,3 +1,3 @@
-export * from "./find";
-export * from "./filter";
-export * from "./iterate";
+export * from "./find.js";
+export * from "./filter.js";
+export * from "./iterate.js";

@@ -1,4 +1,4 @@
-import { iterate, type MaybePromise } from "./iterate";
+import { iterate, type MaybePromise } from "./iterate.js";
 
 export function filter<T>(
   arr: MaybePromise<T>[],
