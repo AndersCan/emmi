@@ -7,6 +7,7 @@ export default defineConfig({
   build: {
     minify: false,
     lib: {
+      fileName: "index",
       entry: path.resolve(process.cwd(), "./src/index.ts"),
       formats: ["es"],
     },

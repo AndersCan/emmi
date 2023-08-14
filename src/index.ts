@@ -5,7 +5,7 @@ type Event<Input, Output> = {
 
 type EventMap = Record<string, Event<unknown, unknown>>;
 
-export function mitti<EMap extends EventMap>() {
+export function emmi<EMap extends EventMap>() {
   const listeners = new Map<
     keyof EMap,
     Array<(args: EMap[string]["input"]) => EMap[string]["output"]>

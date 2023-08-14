@@ -1,6 +1,6 @@
 {
-  "name": "mitti",
-  "version": "0.0.0",
+  "name": "emmi",
+  "version": "0.0.1",
   "type": "module",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -9,10 +9,14 @@
       "import": "./dist/index.js"
     }
   },
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "test": "vitest"
+    "test": "vitest",
+    "prepublishOnly": "vitest run && npm run build"
   },
   "devDependencies": {
     "@types/node": "^20.4.8",

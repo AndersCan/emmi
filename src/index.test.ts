@@ -1,9 +1,9 @@
 import { expect, test, describe } from "vitest";
-import { mitti } from "./index";
+import { emmi } from "./index";
 
-describe("mitti", () => {
+describe("emmi", () => {
   test("fires on", () => {
-    const m = mitti<{
+    const m = emmi<{
       test: {
         input: "input";
         output: "output";
@@ -19,7 +19,7 @@ describe("mitti", () => {
   });
 
   test("fires onReply", () => {
-    const m = mitti<{
+    const m = emmi<{
       test: {
         input: "input";
         output: "output";
