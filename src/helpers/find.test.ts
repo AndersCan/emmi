@@ -37,9 +37,9 @@ describe("find", () => {
     expect(actual).toEqual(2);
   });
 
-  test("can narrow type", async () => {
+  test("can return different type", async () => {
     const arr = [identity(1), identity(2), identity(4)];
-    const fn = (value: number): value is 2 => value === 2;
+    const fn = (value: number) => (value === 2 ? value : undefined);
     const actual: 2 | undefined = await find(arr, fn);
     expect(actual).toEqual(2);
   });

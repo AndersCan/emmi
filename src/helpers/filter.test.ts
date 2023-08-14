@@ -50,10 +50,10 @@ describe("filter", () => {
     expect(actual).toEqual(1337);
   });
   test("can narrow type", async () => {
-    const arr = [identity(1), identity(2), identity(3)];
-    const fn = (value: number): value is 2 => value === 2;
+    const arr = [identity(1), identity(2), identity(3), identity(2)];
+    const fn = (value: number) => (value === 2 ? value : undefined);
     const actual: 2[] = await filter(arr, fn);
-    expect(actual).toEqual([2]);
+    expect(actual).toEqual([2, 2]);
   });
 });
 

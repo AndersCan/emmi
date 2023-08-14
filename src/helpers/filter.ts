@@ -1,9 +1,11 @@
 import { iterate, type MaybePromise } from "./iterate.js";
 
-export function filter<T, S extends T>(
+type NotBoolean<S> = S extends boolean ? never : S;
+
+export function filter<T, S>(
   arr: MaybePromise<T>[],
-  predicate: (t: T) => t is S,
-): Promise<Array<S>>;
+  predicate: (t: T) => NotBoolean<S> | undefined,
+): Promise<Array<NotBoolean<S>>>;
 export function filter<T>(
   arr: MaybePromise<T>[],
   predicate: (t: T) => boolean,

@@ -1,9 +1,18 @@
 import { iterate, type MaybePromise } from "./iterate.js";
 
-export function find<T, S extends T>(
+type NotBoolean<S> = S extends boolean ? never : S;
+
+/**
+ * find element that matches a predicate
+ *
+ * Can alter return type by returning a non-boolean value
+ * @example
+ * const foo: "foo" = find(arr, (item) => item === 'foo' ? item : foo)
+ */
+export function find<T, S>(
   arr: MaybePromise<T>[],
-  predicate: (t: T) => t is S,
-): Promise<S | undefined>;
+  predicate: (t: T) => NotBoolean<S> | undefined,
+): Promise<NotBoolean<S> | undefined>;
 export function find<T>(
   arr: MaybePromise<T>[],
   predicate: (t: T) => boolean,
