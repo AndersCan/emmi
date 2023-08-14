@@ -12,7 +12,11 @@ export default defineConfig({
       formats: ["es", "cjs"],
     },
   },
-  plugins: [dts()],
+  plugins: [
+    dts({
+      exclude: ["./src/*.test.ts"],
+    }),
+  ],
 });
 
 const root = path.resolve(process.cwd(), "./src/dev");
