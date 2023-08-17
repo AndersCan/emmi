@@ -207,8 +207,8 @@ describe("can mark with custom metadata", () => {
     const data = m.emit( "test", "input" );
 
     // Not completely equal as we have added a `symbol`
-    expect( data ).eql( [ { id: "input" } ] );
-    // @ts-expect-error lol
+    expect(data[0]).toEqual( {id:"input"} );
+    // @ts-expect-error
     expect( data[meta] ).toEqual( id );
   });
 });
