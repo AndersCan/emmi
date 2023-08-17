@@ -34,7 +34,7 @@ emitter.on("my_event_name", (input: "my_event_input") => {
 Unlike most event emitters (that I have seen), emmi actually returns a value on `emit`. The value is all the results returned from listeners.
 
 ```js
-const result = emitter.emit("test", "my_event_input"); // ["my_event_output"]
+const result = emitter.emit( "test", "my_event_input" ); // ["my_event_output"]
 ```
 
 Note: The result is within an array as there can be multiple listeners registered to the same event.

@@ -25,8 +25,8 @@ const emitter = emmi<{
 // node
 import pino from "pino";
 const logger = pino();
-emitter.on(log, ({ level, message }) => logger[level](...message));
+emitter.on( log, ( { level, message } ) => logger[level]( ...message ) );
 
 // browser (or just don't add a listener to ignore)
-emitter.on(log, ({ level, message }) => console.log(...message));
+emitter.on( log, ( { level, message } ) => console.log( ...message ) );
 ```

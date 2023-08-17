@@ -1,12 +1,12 @@
-import { defineConfig } from "astro/config";
 import starlight from "@astrojs/starlight";
+import { defineConfig } from "astro/config";
 
 // https://astro.build/config
-export default defineConfig({
+export default defineConfig( {
   site: "https://anderscan.github.io",
   base: "/emmi",
   integrations: [
-    starlight({
+    starlight( {
       title: "Emmi",
       social: {
         github: "https://anderscan.github.io/emmi",
@@ -16,7 +16,10 @@ export default defineConfig({
           label: "Guides",
           items: [
             // Each item here is one entry in the navigation menu.
-            { label: "01 - Getting started", link: "/guides/getting-started/" },
+            {
+              label: "01 - Getting started",
+              link: "/guides/getting-started/",
+            },
             { label: "02 - Patterns ", link: "/guides/patterns/" },
           ],
         },
@@ -25,9 +28,9 @@ export default defineConfig({
           autogenerate: { directory: "reference" },
         },
       ],
-    }),
+    } ),
   ],
 
   // Process images with sharp: https://docs.astro.build/en/guides/assets/#using-sharp
   image: { service: { entrypoint: "astro/assets/services/sharp" } },
-});
+} );

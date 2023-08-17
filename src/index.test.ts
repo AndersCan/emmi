@@ -1,7 +1,8 @@
-import { expect, test, describe } from "vitest";
+import { describe, expect, test } from "vitest";
+import { markForSpread } from "./helpers";
 import { emmi } from "./index";
 
-describe("emmi", () => {
+describe("basic tests", () => {
   test("fires on", () => {
     const m = emmi<{
       test: {
@@ -10,12 +11,12 @@ describe("emmi", () => {
       };
     }>();
 
-    m.on("test", (input) => {
-      expect(input).toEqual("input");
+    m.on( "test", ( input ) => {
+      expect( input ).toEqual( "input" );
       return "output";
-    });
+    } );
 
-    expect(m.emit("test", "input")).toEqual(["output"]);
+    expect( m.emit( "test", "input" ) ).toEqual( [ "output" ] );
   });
 
   test("on replies removes undefined", () => {
@@ -26,52 +27,12 @@ describe("emmi", () => {
       };
     }>();
 
-    m.on("test", (input) => {
-      expect(input).toEqual("input");
+    m.on( "test", ( input ) => {
+      expect( input ).toEqual( "input" );
       return undefined;
-    });
+    } );
 
-    expect(m.emit("test", "input")).toEqual([]);
-  });
-
-  test("on can spread array with options", () => {
-    const m = emmi<{
-      test: {
-        input: "input";
-        output: "output";
-      };
-    }>();
-
-    m.on(
-      "test",
-      (input) => {
-        expect(input).toEqual("input");
-        return ["output", "output", "output"];
-      },
-      { spreadReturn: true },
-    );
-
-    expect(m.emit("test", "input")).toEqual(["output", "output", "output"]);
-  });
-
-  test("on - spreadFalse", () => {
-    const m = emmi<{
-      test: {
-        input: "input";
-        output: "output";
-      };
-    }>();
-
-    m.on(
-      "test",
-      (input) => {
-        expect(input).toEqual("input");
-        return "output";
-      },
-      { spreadReturn: false },
-    );
-
-    expect(m.emit("test", "input")).toEqual(["output"]);
+    expect( m.emit( "test", "input" ) ).toEqual( [] );
   });
 
   test("fires onReply", () => {
@@ -82,17 +43,17 @@ describe("emmi", () => {
       };
     }>();
 
-    m.on("test", (input) => {
-      expect(input).toEqual("input");
+    m.on( "test", ( input ) => {
+      expect( input ).toEqual( "input" );
       return "output";
-    });
+    } );
 
-    m.onReply("test", (input, output) => {
-      expect(input).toEqual("input");
-      expect(output).toEqual(["output"]);
-    });
+    m.onReply( "test", ( input, output ) => {
+      expect( input ).toEqual( "input" );
+      expect( output ).toEqual( [ "output" ] );
+    } );
 
-    expect(m.emit("test", "input")).toEqual(["output"]);
+    expect( m.emit( "test", "input" ) ).toEqual( [ "output" ] );
   });
 
   test("fires onReply - 2 listeners", () => {
@@ -105,20 +66,20 @@ describe("emmi", () => {
 
     let i = 0;
 
-    m.onReply("test", (input, output) => {
+    m.onReply( "test", ( input, output ) => {
       i++;
-      expect(input).toEqual("input");
-      expect(output).toEqual([]);
-    });
+      expect( input ).toEqual( "input" );
+      expect( output ).toEqual( [] );
+    } );
 
-    m.onReply("test", (input, output) => {
+    m.onReply( "test", ( input, output ) => {
       i++;
-      expect(input).toEqual("input");
-      expect(output).toEqual([]);
-    });
+      expect( input ).toEqual( "input" );
+      expect( output ).toEqual( [] );
+    } );
 
-    expect(m.emit("test", "input")).toEqual([]);
-    expect(i).toEqual(2);
+    expect( m.emit( "test", "input" ) ).toEqual( [] );
+    expect( i ).toEqual( 2 );
   });
 
   test("off", () => {
@@ -129,14 +90,14 @@ describe("emmi", () => {
       };
     }>();
 
-    const handler = (input: "input"): "output" => {
-      expect(input).toEqual("input");
+    const handler = ( input: "input" ): "output" => {
+      expect( input ).toEqual( "input" );
       return "output";
     };
-    m.on("test", handler);
-    expect(m.emit("test", "input")).toEqual(["output"]);
-    m.off("test", handler);
-    expect(m.emit("test", "input")).toEqual([]);
+    m.on( "test", handler );
+    expect( m.emit( "test", "input" ) ).toEqual( [ "output" ] );
+    m.off( "test", handler );
+    expect( m.emit( "test", "input" ) ).toEqual( [] );
   });
 
   test("off all", () => {
@@ -147,14 +108,17 @@ describe("emmi", () => {
       };
     }>();
 
-    const handler = (input: "input"): "output" => {
-      expect(input).toEqual("input");
+    const handler = ( input: "input" ): "output" => {
+      expect( input ).toEqual( "input" );
       return "output";
     };
-    m.on("test", handler);
-    m.on("test", () => "output");
-    m.off("test");
-    expect(m.emit("test", "input")).toEqual([]);
+    m.on( "test", handler );
+    m.on( "test", () => {
+      const x = "output";
+      return x;
+    } );
+    m.off( "test" );
+    expect( m.emit( "test", "input" ) ).toEqual( [] );
   });
 
   test("offReply", () => {
@@ -165,14 +129,14 @@ describe("emmi", () => {
       };
     }>();
 
-    const handler = (input: "input", output: "output"[]) => {
-      expect(input).toEqual("input");
-      expect(output).toEqual([]);
+    const handler = ( input: "input", output: "output"[] ) => {
+      expect( input ).toEqual( "input" );
+      expect( output ).toEqual( [] );
     };
-    m.onReply("test", handler);
-    expect(m.emit("test", "input")).toEqual([]);
-    m.offReply("test", handler);
-    expect(m.emit("test", "input")).toEqual([]);
+    m.onReply( "test", handler );
+    expect( m.emit( "test", "input" ) ).toEqual( [] );
+    m.offReply( "test", handler );
+    expect( m.emit( "test", "input" ) ).toEqual( [] );
   });
 
   test("offReply - undefined", () => {
@@ -183,14 +147,14 @@ describe("emmi", () => {
       };
     }>();
 
-    const handler = (input: "input", output: "output"[]) => {
-      expect(input).toEqual("input");
-      expect(output).toEqual([]);
+    const handler = ( input: "input", output: "output"[] ) => {
+      expect( input ).toEqual( "input" );
+      expect( output ).toEqual( [] );
     };
-    m.onReply("test", handler);
-    expect(m.emit("test", "input")).toEqual([]);
-    m.offReply("test", handler);
-    expect(m.emit("test", "input")).toEqual([]);
+    m.onReply( "test", handler );
+    expect( m.emit( "test", "input" ) ).toEqual( [] );
+    m.offReply( "test", handler );
+    expect( m.emit( "test", "input" ) ).toEqual( [] );
   });
 
   test("offReply all", () => {
@@ -203,18 +167,86 @@ describe("emmi", () => {
 
     let i = 0;
 
-    m.onReply("test", (input, output) => {
+    m.onReply( "test", ( input, output ) => {
       i++;
-      expect(input).toEqual("input");
-      expect(output).toEqual([]);
-    });
+      expect( input ).toEqual( "input" );
+      expect( output ).toEqual( [] );
+    } );
 
-    expect(m.emit("test", "input")).toEqual([]);
-    expect(i).toEqual(1);
+    expect( m.emit( "test", "input" ) ).toEqual( [] );
+    expect( i ).toEqual( 1 );
 
-    m.offReply("test");
+    m.offReply( "test" );
 
-    expect(m.emit("test", "input")).toEqual([]);
-    expect(i).toEqual(1);
+    expect( m.emit( "test", "input" ) ).toEqual( [] );
+    expect( i ).toEqual( 1 );
+  });
+});
+describe("can mark with custom metadata", () => {
+  const meta = Symbol( "meta" );
+  test("can mark emitted responses", () => {
+    const m = emmi<{
+      test: {
+        input: "input";
+        output: {
+          id: string;
+        };
+      };
+    }>();
+
+    m.on( "test", ( input ) => {
+      return { id: input };
+    } );
+
+    const id = Math.random();
+    m.onReply( "test", ( _input, output ) => {
+      // @ts-expect-error
+      output[meta] = id;
+    } );
+
+    const data = m.emit( "test", "input" );
+
+    // Not completely equal as we have added a `symbol`
+    expect( data ).eql( [ { id: "input" } ] );
+    // @ts-expect-error lol
+    expect( data[meta] ).toEqual( id );
+  });
+});
+
+describe("options - spread", () => {
+  test("on can spread array with options", () => {
+    const m = emmi<{
+      test: {
+        input: "input";
+        output: "output";
+      };
+    }>();
+
+    m.on( "test", ( input ) => {
+      expect( input ).toEqual( "input" );
+      return markForSpread( [ "output", "output", "output" ] );
+    } );
+
+    expect( m.emit( "test", "input" ) ).toEqual( [
+      "output",
+      "output",
+      "output",
+    ] );
+  });
+
+  test("on - spreadFalse", () => {
+    const m = emmi<{
+      test: {
+        input: "input";
+        output: "output";
+      };
+    }>();
+
+    m.on( "test", ( input ) => {
+      expect( input ).toEqual( "input" );
+      return "output";
+    } );
+
+    expect( m.emit( "test", "input" ) ).toEqual( [ "output" ] );
   });
 });

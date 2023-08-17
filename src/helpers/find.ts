@@ -11,25 +11,25 @@ type NotBoolean<S> = S extends boolean ? never : S;
  */
 export function find<T, S>(
   arr: MaybePromise<T>[],
-  predicate: (t: T) => NotBoolean<S> | undefined,
+  predicate: ( t: T ) => NotBoolean<S> | undefined,
 ): Promise<NotBoolean<S> | undefined>;
 export function find<T>(
   arr: MaybePromise<T>[],
-  predicate: (t: T) => boolean,
+  predicate: ( t: T ) => boolean,
 ): Promise<T | undefined>;
 export function find<T>(
   arr: MaybePromise<T>[],
-  predicate: (t: T) => boolean,
+  predicate: ( t: T ) => boolean,
 ): Promise<T | undefined> {
   let done = false;
-  return new Promise((resolve, reject) => {
-    return iterate(arr, (element, itemsLeft) => {
-      if (!done && predicate(element)) {
+  return new Promise( ( resolve, reject ) => {
+    return iterate( arr, ( element, itemsLeft ) => {
+      if ( !done && predicate( element ) ) {
         done = true;
-        resolve(element);
+        resolve( element );
       }
 
-      if (itemsLeft === 0) resolve(undefined);
-    }).catch(reject);
-  });
+      if ( itemsLeft === 0 ) resolve( undefined );
+    } ).catch( reject );
+  } );
 }

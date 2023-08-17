@@ -1,4 +1,4 @@
-import { expect, test, describe } from "vitest";
+import { describe, expect, test } from "vitest";
 import { emmi } from "./index";
 
 /**
@@ -13,20 +13,20 @@ describe("abort-controller", () => {
       };
     }>();
 
-    m.on("test", (signal) => {
-      return sleep(50, signal).then((result) => result);
-    });
+    m.on( "test", ( signal ) => {
+      return sleep( 50, signal ).then(( result ) => result);
+    } );
 
     {
       const controller = new AbortController();
-      const reply = Promise.all(m.emit("test", controller.signal));
-      expect(await reply).toEqual(["ok"]);
+      const reply = Promise.all( m.emit( "test", controller.signal ) );
+      expect( await reply ).toEqual( [ "ok" ] );
     }
     {
       const controller = new AbortController();
-      const reply = Promise.all(m.emit("test", controller.signal));
+      const reply = Promise.all( m.emit( "test", controller.signal ) );
       controller.abort();
-      expect(await reply).toEqual(["abort"]);
+      expect( await reply ).toEqual( [ "abort" ] );
     }
   });
 
@@ -38,41 +38,41 @@ describe("abort-controller", () => {
       };
     }>();
 
-    m.on("test", (signal) => {
-      return sleep(10, signal.signal).then((result) => result);
-    });
+    m.on( "test", ( signal ) => {
+      return sleep( 10, signal.signal ).then(( result ) => result);
+    } );
 
     {
       const controller = new AbortController();
-      const reply = Promise.all(m.emit("test", controller));
-      expect(await reply).toEqual(["ok"]);
+      const reply = Promise.all( m.emit( "test", controller ) );
+      expect( await reply ).toEqual( [ "ok" ] );
     }
 
-    m.on("test", async (signal) => {
-      await sleep(10);
+    m.on( "test", async ( signal ) => {
+      await sleep( 10 );
       signal.abort();
-      return sleep(10).then(() => "override");
-    });
+      return sleep( 10 ).then(() => "override");
+    } );
 
     {
       const controller = new AbortController();
-      const reply = Promise.all(m.emit("test", controller));
+      const reply = Promise.all( m.emit( "test", controller ) );
       controller.abort();
-      expect(await reply).toEqual(["abort", "override"]);
+      expect( await reply ).toEqual( [ "abort", "override" ] );
     }
   });
 });
 
-function sleep(ms: number, signal?: AbortSignal): Promise<"ok" | "abort"> {
-  if (signal && signal.aborted) {
-    return Promise.resolve("abort");
+function sleep( ms: number, signal?: AbortSignal ): Promise<"ok" | "abort"> {
+  if ( signal && signal.aborted ) {
+    return Promise.resolve( "abort" );
   }
-  return new Promise((resolve) => {
-    let it = setTimeout(resolve, ms, "ok");
-    signal &&
-      signal.addEventListener("abort", () => {
-        clearTimeout(it);
-        resolve("abort");
-      });
-  });
+  return new Promise( ( resolve ) => {
+    let it = setTimeout( resolve, ms, "ok" );
+    signal
+      && signal.addEventListener( "abort", () => {
+        clearTimeout( it );
+        resolve( "abort" );
+      } );
+  } );
 }
