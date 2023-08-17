@@ -5,8 +5,9 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches: [main]
-    paths:
-      - docs/**
+    # Can't do this as github always deploys docs site - resulting in an empty Jekyll site :/
+    # paths:
+    #   - docs/**
   # Allows you to run this workflow manually from the Actions tab on GitHub.
   workflow_dispatch:
 
