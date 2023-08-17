@@ -23,9 +23,8 @@
     "dev": "vite",
     "build": "vite build",
     "test": "vitest",
-    "preversion": "dprint fmt && bun test && npm run build",
-    "prepublishOnly": "vitest run && npm run build",
-    "prepare": "husky install"
+    "preversion": "dprint check && bun test && npm run build",
+    "prepublishOnly": "vitest run && npm run build"
   },
   "devDependencies": {
     "@types/node": "^20.4.8",

@@ -90,7 +90,7 @@ export function emmi<EMap extends EventMap>() {
       const isArr = isArray( res );
       if ( isArr && isMarkedForSpread( res ) ) {
         replies.push( ...res.filter( isDefined ) );
-      } else if (isDefined(res)) {
+      } else if ( isDefined( res ) ) {
         // Todo: Hard to type as `Output` can be an array, but not marked
         replies.push( res as NonUndefined<EMap[Key]["output"]> );
       }

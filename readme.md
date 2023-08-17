@@ -2,15 +2,13 @@
 
 > WIP
 
-Inspired by [mitt](https://github.com/developit/mitt/tree/main), but with a few modifications. Main difference is that events are typed with an `input` and `output` field.
+Inspired by [mitt](https://github.com/developit/mitt/tree/main), but with a large modification: listeners return a response to the `emit` caller.
 
-This enables:
+When defining an event i `emmi`, you need to type it with an `input` and `output` field. Calling `emit` will return an `Output[]` value. `Output` can be anything you want.
 
-- calling `emit` returns an `Output[]` value.
-  - listeners can directly respond to your events
-- You can listen to event replies with `onReply`
+Also added an `onReply` listener that receives the `Input` and `Output[]` result of an `emit`.
 
-Other that that, should be similar to other event emitter libraries.
+This enables some interesting patterns not possible with most event emitters.
 
 ## Listeners
 
