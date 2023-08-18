@@ -23,6 +23,10 @@ export function emmi<EMap extends EventMap>() {
     >
   >();
 
+  const wildCardListeners: Array<
+    ( args: EMap[keyof EMap]["input"] ) => EMap[keyof EMap]["output"]
+  > = [];
+
   const replyListeners = new Map<
     keyof EMap,
     Array<
@@ -38,13 +42,25 @@ export function emmi<EMap extends EventMap>() {
    *
    * Note: Registering the same function multiple times is possible, but not supported
    */
-
+  function on<Key extends "*">(
+    key: Key,
+    listener: ( key: keyof EMap, args: EMap[keyof EMap]["input"] ) => void,
+  ): void;
   function on<Key extends keyof EMap>(
     key: Key,
     listener: (
       args: EMap[Key]["input"],
     ) => EMap[Key]["output"] | MarkedForSpread<EMap[Key]["output"][]>,
+  ): void;
+  function on<Key extends keyof EMap>(
+    key: Key | "*",
+    listener: Key extends "*"
+      ? ( key: keyof EMap, args: EMap[keyof EMap]["input"] ) => void
+      : (
+        args: EMap[Key]["input"],
+      ) => EMap[Key]["output"] | MarkedForSpread<EMap[Key]["output"][]>,
   ) {
+    
     const handlers = listeners.get( key );
     if ( handlers ) {
       handlers.push( listener );
