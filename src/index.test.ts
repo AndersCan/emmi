@@ -114,7 +114,7 @@ describe("basic tests", () => {
     };
     m.on( "test", handler );
     m.on( "test", () => {
-      const x = "output";
+      const x = "output" as const;
       return x;
     } );
     m.off( "test" );
@@ -248,5 +248,32 @@ describe("options - spread", () => {
     } );
 
     expect( m.emit( "test", "input" ) ).toEqual( [ "output" ] );
+  });
+});
+
+describe("wildcard", () => {
+  test("fires on", () => {
+    const m = emmi<{
+      test: {
+        input: "input";
+        output: "output";
+      };
+    }>();
+
+    m.on( "test", ( input ) => {
+      expect( input ).toEqual( "input" );
+      return "output";
+    } );
+
+    let key = "";
+    let input = "";
+    m.on("*", (_key, _input) => {
+      console.log({_key,_input})
+      key = _key, input = _input;
+    } );
+
+    expect( m.emit( "test", "input" ) ).toEqual( [ "output" ] );
+    expect( key ).toEqual( "test" );
+    expect( input ).toEqual( "input" );
   });
 });

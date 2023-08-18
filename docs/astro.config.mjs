@@ -20,7 +20,8 @@ export default defineConfig( {
               label: "01 - Getting started",
               link: "/guides/getting-started/",
             },
-            { label: "02 - Patterns ", link: "/guides/patterns/" },
+            { label: "02 - Project goals", link: "/guides/goals/" },
+            { label: "03 - Patterns", link: "/guides/patterns/" },
           ],
         },
         {

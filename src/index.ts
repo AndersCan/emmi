@@ -24,7 +24,7 @@ export function emmi<EMap extends EventMap>() {
   >();
 
   const wildCardListeners: Array<
-    ( args: EMap[keyof EMap]["input"] ) => EMap[keyof EMap]["output"]
+    ( key: keyof EMap, input: EMap[keyof EMap]["input"] ) => void
   > = [];
 
   const replyListeners = new Map<
@@ -52,6 +52,7 @@ export function emmi<EMap extends EventMap>() {
       args: EMap[Key]["input"],
     ) => EMap[Key]["output"] | MarkedForSpread<EMap[Key]["output"][]>,
   ): void;
+
   function on<Key extends keyof EMap>(
     key: Key | "*",
     listener: Key extends "*"
@@ -60,7 +61,12 @@ export function emmi<EMap extends EventMap>() {
         args: EMap[Key]["input"],
       ) => EMap[Key]["output"] | MarkedForSpread<EMap[Key]["output"][]>,
   ) {
-    
+
+    if (key === "*") {
+      wildCardListeners.push(listener)
+      return
+    }
+
     const handlers = listeners.get( key );
     if ( handlers ) {
       handlers.push( listener );
@@ -111,12 +117,21 @@ export function emmi<EMap extends EventMap>() {
       }
     }
 
+    const wl = wildCardListeners;
+    i = -1;
+    while ( wl.length > ++i ) {
+      const fn = wl[i];
+      fn( key,data );
+    }
+    
     const rl = replyListeners.get( key ) || [];
     i = -1;
     while ( rl.length > ++i ) {
       const fn = rl[i];
       fn( data, replies );
     }
+
+
     return replies;
   }
 
