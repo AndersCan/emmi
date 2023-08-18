@@ -1,5 +1,5 @@
+import { emmi, Event } from "#src/index";
 import { describe, expect, test } from "vitest";
-import { emmi, Event } from "./index";
 
 type MaybePromise<T> = T | Promise<T>;
 

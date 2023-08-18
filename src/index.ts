@@ -1,6 +1,5 @@
 import { isMarkedForSpread, MarkedForSpread } from "./helpers";
-export const meta = Symbol( "emmmetadata" );
-// todo: this replaces ugly options?
+
 export type Event<Input, Output> = {
   input: Input;
   output: Output | undefined | void;
@@ -10,7 +9,7 @@ type EventMap = Record<string, Event<unknown, unknown>>;
 type NonUndefined<T> = T extends undefined | void ? never : T;
 
 /**
- * emmi - a small event emitter that enables many workflows
+ * emmi - yet another event emitter
  *
  * [Github](https://github.com/AndersCan/emmi)
  */

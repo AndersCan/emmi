@@ -1,6 +1,6 @@
+import { find } from "#src/helpers";
+import { emmi } from "#src/index";
 import { describe, expect, test } from "vitest";
-import { find } from "./helpers";
-import { emmi } from "./index";
 
 /**
  * sanity checks usability

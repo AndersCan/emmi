@@ -1,5 +1,5 @@
+import { emmi } from "#src/index";
 import { describe, expect, test } from "vitest";
-import { emmi } from "./index";
 
 /**
  * sanity checks usability
